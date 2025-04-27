@@ -4,6 +4,7 @@ export enum ConfigKeys {
   App = "App",
   Db = "Db",
   Jwt = "Jwt",
+  OpenAI="OpenAi"
 }
 
 const AppConfig = registerAs(ConfigKeys.App, () => ({
@@ -15,6 +16,10 @@ const JwtConfig = registerAs(ConfigKeys.Jwt, () => ({
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 }));
 
+const OpenAIConfig = registerAs(ConfigKeys.OpenAI, () => ({
+    apiKey: process.env.OPENAI_API_KEY,
+}));
+
 const DbConfig = registerAs(ConfigKeys.Db, () => ({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -23,4 +28,4 @@ const DbConfig = registerAs(ConfigKeys.Db, () => ({
   database: process.env.DB_DATABASE,
 }));
 
-export const configurations = [AppConfig, DbConfig, JwtConfig];
+export const configurations = [AppConfig, DbConfig, JwtConfig,OpenAIConfig];

@@ -6,6 +6,7 @@ import { MongooseDbConfig } from './config/typeorm.config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     UserModule,
     AuthModule,
-    JwtModule
+    JwtModule,
+    AiModule
     // other modules
   ],
 })
