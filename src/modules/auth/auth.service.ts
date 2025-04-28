@@ -36,9 +36,9 @@ export class AuthService {
         mobile,
       });
     }
-    await this.createOtpForUser(user);
+    const code= await this.createOtpForUser(user);
     return {
-      message: "send code to: " + user.mobile,
+      message: "send code to: " + user.mobile + "your code is: "+code,
     };
   }
 
@@ -91,6 +91,7 @@ export class AuthService {
       otp.expiers_in = expierIn;
     }
     await otp?.save();
+    return otp?.code
   }
 
   async generateToken(payload: TokenPayload) {
