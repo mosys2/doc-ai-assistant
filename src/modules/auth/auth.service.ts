@@ -25,8 +25,8 @@ export class AuthService {
     @InjectModel(Otp.name)
     private otpModel: Model<OtpDocument>,
 
-    private jwtService:JwtService,
-    private configService:ConfigService
+    private jwtService: JwtService,
+    private configService: ConfigService
   ) {}
   async createOtp(createOtpDto: CreateOtpDto) {
     const { mobile } = createOtpDto;
@@ -61,11 +61,15 @@ export class AuthService {
       await user.save();
     }
 
-    const {accessToken,refreshToken}= await this.generateToken({id:user.id,mobile:user.mobile})
+    const { accessToken, refreshToken } = await this.generateToken({
+      id: user.id,
+      mobile: user.mobile,
+    });
 
     return {
-      message:"ورود با موفقیت",
-      accessToken,refreshToken
+      message: "ورود با موفقیت",
+      accessToken,
+      refreshToken,
     };
   }
 
@@ -89,17 +93,34 @@ export class AuthService {
     await otp?.save();
   }
 
-  async generateToken(payload:TokenPayload){
-    const accessToken=this.jwtService.sign(payload,{
-      secret:this.configService.get("Jwt.accessTokenSecret"),
-      expiresIn:"30d"
+  async generateToken(payload: TokenPayload) {
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.get("Jwt.accessTokenSecret"),
+      expiresIn: "30d",
     });
 
-    const refreshToken=this.jwtService.sign(payload,{
-      secret:this.configService.get("Jwt.refreshTokenSecret"),
-      expiresIn:"90d"
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get("Jwt.refreshTokenSecret"),
+      expiresIn: "90d",
     });
 
-    return {accessToken,refreshToken}
+    return { accessToken, refreshToken };
+  }
+
+  async validationAccessToken(token) {
+    try {
+      const payload = this.jwtService.verify<TokenPayload>(token, {
+        secret: this.configService.get("Jwt.accessTokenSecret"),
+      });
+      if (typeof payload == "object" && payload?.id) {
+        const user = await this.userModel.findById(payload.id);
+        if (!user) {
+          throw new UnauthorizedException("لطفا وارد حساب کاربری خود شوید");
+        }
+        return user;
+      }
+    } catch (error) {
+      throw new UnauthorizedException("لطفا وارد حساب کاربری خود شوید");
+    }
   }
 }

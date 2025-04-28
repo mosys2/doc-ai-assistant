@@ -1,24 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { AiService } from './ai.service';
 import { ChatDto } from './dto/chat.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('ai')
+@UseGuards(AuthGuard)
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Post('create-chat')
-  createChat(@Body('prompt') prompt: string) {
-    const userId='680e222f57e7deb2eb79289c'
-    return this.aiService.createChat(userId);
+  createChat(@Req()request:Request,@Body('prompt') prompt: string) {
+    const {user}=request as any
+    return this.aiService.createChat(user.id);
   }
 
   @Post('chat')
-  chat(@Body() chatDto: ChatDto) {
-    const userId = '680e222f57e7deb2eb79289c';
+  chat(@Req()request:Request,@Body() chatDto: ChatDto) {
+    const {user}=request as any
     const { chatId, templateType, fields } = chatDto;
-    
     return this.aiService.generateDocument({
-      userId,
+      userId:user.id,
       chatId,
       templateType,
       fields

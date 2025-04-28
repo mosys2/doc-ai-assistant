@@ -19,7 +19,6 @@ export class AiService {
       apiKey: this.configService.get('OpenAi.apiKey'),
     });
   }
-
   async createChat(userId: string): Promise<{ chatId: string }> {
     const chatId = uuidv4();
     const newHistory = new this.chatHistoryModel({
@@ -30,8 +29,6 @@ export class AiService {
     await newHistory.save();
     return { chatId }; 
   }
-
-
   async generateDocument(inputData: {
     userId: string;
     chatId: string;
@@ -51,7 +48,6 @@ export class AiService {
       throw new Error(`قالبی با نوع '${templateType}' یافت نشد.`);
     }
   
-    // چک کن که فیلدهای لازم موجود باشن
     for (const field of templateConfig.requiredFields) {
       if (!(field in fields)) {
         throw new Error(`فیلد مورد نیاز '${field}' وجود ندارد.`);
@@ -75,9 +71,6 @@ export class AiService {
     await this.saveChatHistory(userId, chatId, promptContent, generatedText);
     return generatedText;
   }
-  
-  
-
   private async saveChatHistory(userId: string, chatId: string, userMessage: string, aiMessage: string): Promise<void> {
     const existingHistory = await this.chatHistoryModel.findOne({ chatId });
 
