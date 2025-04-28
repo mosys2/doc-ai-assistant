@@ -16,8 +16,10 @@ export class MongooseDbConfig implements MongooseOptionsFactory {
     let uri = `mongodb://${host}:${port}/${database}`;
 
     if (username && password) {
-      uri = `mongodb://${username}:${password}@${host}:${port}/${database}`;
+      uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=admin`;
     }
+    console.log(uri)
+
 
     return {
       uri,

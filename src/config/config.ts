@@ -21,6 +21,7 @@ const OpenAIConfig = registerAs(ConfigKeys.OpenAI, () => ({
 }));
 
 const DbConfig = registerAs(ConfigKeys.Db, () => ({
+  uri:process.env.DB_URI,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   username: process.env.DB_USERNAME,
