@@ -76,9 +76,9 @@ export class AuthService {
   async createOtpForUser(user) {
     const expierIn = new Date(new Date().getTime() + 1000 * 60 * 2);
     const code = randomInt(10000, 99999).toString();
-    const otp = await this.otpModel.findOne({ user });
+    let otp = await this.otpModel.findOne({ user });
     if (!otp) {
-      this.otpModel.create({
+      otp=await this.otpModel.create({
         user,
         code,
         expiers_in: expierIn,
@@ -91,7 +91,8 @@ export class AuthService {
       otp.expiers_in = expierIn;
     }
     await otp?.save();
-    return otp?.code
+    console
+    return code
   }
 
   async generateToken(payload: TokenPayload) {
