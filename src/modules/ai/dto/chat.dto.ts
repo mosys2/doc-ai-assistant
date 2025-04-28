@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsObject } from "class-validator";
 
 export class ChatDto {
     @IsNotEmpty()
@@ -6,4 +6,10 @@ export class ChatDto {
 
     @IsNotEmpty()
     chatId:string;
+
+    @IsNotEmpty()
+    templateType:string
+
+    @IsObject()
+    fields:object
 }

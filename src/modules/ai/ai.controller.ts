@@ -14,7 +14,15 @@ export class AiController {
 
   @Post('chat')
   chat(@Body() chatDto: ChatDto) {
-    const userId='680e222f57e7deb2eb79289c'
-    return this.aiService.chat(chatDto.prompt,userId,chatDto.chatId);
+    const userId = '680e222f57e7deb2eb79289c';
+    const { chatId, templateType, fields } = chatDto;
+    
+    return this.aiService.generateDocument({
+      userId,
+      chatId,
+      templateType,
+      fields
+    });
   }
+  
 }
