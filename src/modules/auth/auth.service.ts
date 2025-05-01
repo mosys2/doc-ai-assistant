@@ -15,6 +15,7 @@ import { randomInt } from "crypto";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { TokenPayload } from "./types/payload";
+import { ResultDto } from "src/common/Dtos/ResultDto.dto";
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService
   ) {}
-  async createOtp(createOtpDto: CreateOtpDto) {
+  async createOtp(createOtpDto: CreateOtpDto):Promise<ResultDto> {
     const { mobile } = createOtpDto;
     let user = await this.userModel.findOne({ mobile });
     if (!user) {
@@ -38,11 +39,12 @@ export class AuthService {
     }
     const code= await this.createOtpForUser(user);
     return {
+      isSuccess:true,
       message: "send code to: " + user.mobile + "your code is: "+code,
     };
   }
 
-  async checkOtp(checkOtpDto: CheckOtpDto) {
+  async checkOtp(checkOtpDto: CheckOtpDto):Promise<ResultDto<Object>> {
     const { mobile, code } = checkOtpDto;
     const user = await this.userModel.findOne({ mobile });
     const now = new Date();
@@ -67,9 +69,9 @@ export class AuthService {
     });
 
     return {
+      isSuccess:true,
       message: "ورود با موفقیت",
-      accessToken,
-      refreshToken,
+      data:{accessToken,refreshToken}
     };
   }
 

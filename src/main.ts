@@ -6,12 +6,13 @@ import helmet from "helmet";
 import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule, SwaggerDocumentOptions } from "@nestjs/swagger";
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: true,
-    credentials: true, // اینجا اشتباه تایپی داشتی: credential ❌ -> credentials ✅
+    credentials: true,
   });
 
   app.use(helmet());
@@ -50,6 +51,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig, swaggerOptions);
   SwaggerModule.setup('swagger', app, document);
+  app.use("/api-json", (req, res) => res.json(document));
+
 
   const configService = app.get(ConfigService);
   const port = configService.get("App.port");

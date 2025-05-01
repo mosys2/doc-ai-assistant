@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ChatHistory, ChatHistoryDocument } from './schemas/chathistory.schema';
 import { templates } from './templates/templates';
+import { ResultDto } from 'src/common/Dtos/ResultDto.dto';
 
 @Injectable()
 export class AiService {
@@ -19,7 +20,7 @@ export class AiService {
       apiKey: this.configService.get('OpenAi.apiKey'),
     });
   }
-  async createChat(userId: string): Promise<{ chatId: string }> {
+  async createChat(userId: string): Promise<ResultDto<Object>> {
     const chatId = uuidv4();
     const newHistory = new this.chatHistoryModel({
       userId,
@@ -27,17 +28,19 @@ export class AiService {
       messages: [],
     });
     await newHistory.save();
-    return { chatId }; 
+    return { 
+      isSuccess:true,
+      message:"با موفقیت ایجاد شد",
+      data:{chatId}
+     }; 
   }
   async generateDocument(inputData: {
     userId: string;
     chatId: string;
     templateType: string;
     fields: { [key: string]: any };
-  }): Promise<string> {
-  
+  }): Promise<ResultDto<object>> {
     const { userId, chatId, templateType, fields } = inputData;
-  
     const chatHistory = await this.chatHistoryModel.findOne({ chatId }) as any;
     if (!chatHistory) {
       throw new Error('چت با این شناسه پیدا نشد.');
@@ -69,7 +72,11 @@ export class AiService {
   
     const generatedText = response.choices[0]?.message?.content || '';
     await this.saveChatHistory(userId, chatId, promptContent, generatedText);
-    return generatedText;
+    return {
+      isSuccess:true,
+      message:"با موفقیت ایجاد شد",
+      data:{generatedText}
+    };
   }
   private async saveChatHistory(userId: string, chatId: string, userMessage: string, aiMessage: string): Promise<void> {
     const existingHistory = await this.chatHistoryModel.findOne({ chatId });
