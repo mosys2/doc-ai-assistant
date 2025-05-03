@@ -29,7 +29,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService
   ) {}
-  async createOtp(createOtpDto: CreateOtpDto):Promise<ResultDto> {
+  async createOtp(createOtpDto: CreateOtpDto): Promise<ResultDto> {
     const { mobile } = createOtpDto;
     let user = await this.userModel.findOne({ mobile });
     if (!user) {
@@ -37,14 +37,14 @@ export class AuthService {
         mobile,
       });
     }
-    const code= await this.createOtpForUser(user);
+    const code = await this.createOtpForUser(user);
     return {
-      isSuccess:true,
-      message: "send code to: " + user.mobile + "your code is: "+code,
+      isSuccess: true,
+      message: "send code to: " + user.mobile + "your code is: " + code,
     };
   }
 
-  async checkOtp(checkOtpDto: CheckOtpDto):Promise<ResultDto<Object>> {
+  async checkOtp(checkOtpDto: CheckOtpDto): Promise<ResultDto<Object>> {
     const { mobile, code } = checkOtpDto;
     const user = await this.userModel.findOne({ mobile });
     const now = new Date();
@@ -69,9 +69,9 @@ export class AuthService {
     });
 
     return {
-      isSuccess:true,
+      isSuccess: true,
       message: "ورود با موفقیت",
-      data:{accessToken,refreshToken}
+      data: { id: user.id, accessToken, refreshToken, mobile: user.mobile },
     };
   }
 
@@ -80,7 +80,7 @@ export class AuthService {
     const code = randomInt(10000, 99999).toString();
     let otp = await this.otpModel.findOne({ user });
     if (!otp) {
-      otp=await this.otpModel.create({
+      otp = await this.otpModel.create({
         user,
         code,
         expiers_in: expierIn,
@@ -93,8 +93,8 @@ export class AuthService {
       otp.expiers_in = expierIn;
     }
     await otp?.save();
-    console
-    return code
+    console;
+    return code;
   }
 
   async generateToken(payload: TokenPayload) {

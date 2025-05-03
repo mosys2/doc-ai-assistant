@@ -7,6 +7,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AiModule } from './modules/ai/ai.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -21,7 +22,9 @@ import { AiModule } from './modules/ai/ai.module';
     UserModule,
     AuthModule,
     JwtModule,
-    AiModule
+    AiModule,
+    PaymentModule,
+    
     // other modules
   ],
 })

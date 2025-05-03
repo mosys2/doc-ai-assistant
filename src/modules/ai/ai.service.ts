@@ -80,7 +80,6 @@ export class AiService {
   }
   private async saveChatHistory(userId: string, chatId: string, userMessage: string, aiMessage: string): Promise<void> {
     const existingHistory = await this.chatHistoryModel.findOne({ chatId });
-
     if (existingHistory) {
       existingHistory.messages.push({ role: 'user', content: userMessage });
       existingHistory.messages.push({ role: 'assistant', content: aiMessage });

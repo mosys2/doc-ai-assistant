@@ -4,7 +4,8 @@ export enum ConfigKeys {
   App = "App",
   Db = "Db",
   Jwt = "Jwt",
-  OpenAI="OpenAi"
+  OpenAI="OpenAi",
+  Zarinpal="Zarinpal"
 }
 
 const AppConfig = registerAs(ConfigKeys.App, () => ({
@@ -20,6 +21,13 @@ const OpenAIConfig = registerAs(ConfigKeys.OpenAI, () => ({
     apiKey: process.env.OPENAI_API_KEY,
 }));
 
+const ZarinpalConfig = registerAs(ConfigKeys.Zarinpal, () => ({
+  requestUrl: process.env.ZARINPAL_REQUEST_URL,
+  merchandId: process.env.ZARINPAL_MERCHANT_ID,
+  verifyUrl: process.env.ZARINPAL_VERIFY_URL,
+  calbackUrl: process.env.ZARINPAL_CALBACK_URL,
+}));
+
 const DbConfig = registerAs(ConfigKeys.Db, () => ({
   uri:process.env.DB_URI,
   host: process.env.DB_HOST,
@@ -29,4 +37,4 @@ const DbConfig = registerAs(ConfigKeys.Db, () => ({
   database: process.env.DB_DATABASE,
 }));
 
-export const configurations = [AppConfig, DbConfig, JwtConfig,OpenAIConfig];
+export const configurations = [AppConfig, DbConfig, JwtConfig,OpenAIConfig,ZarinpalConfig];

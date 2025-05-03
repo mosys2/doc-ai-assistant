@@ -1,6 +1,7 @@
 // user.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { Package } from 'src/modules/payment/schemas/package.schema';
 
 export type UserDocument = User & Document;
 
@@ -14,6 +15,9 @@ export class User {
 
   @Prop({default:false})
   isMobileVerified:boolean
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Package', default: null })
+  currentPackage: Package;
   
 }
 
