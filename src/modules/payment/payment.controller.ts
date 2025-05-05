@@ -7,12 +7,11 @@ import { ResultDto } from 'src/common/Dtos/ResultDto.dto';
 import { VerifyPaymentDto } from './dto/verify-paymen.dto';
 
 @Controller('payment')
-
+@UseGuards(AuthGuard)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('create-payment')
-  @UseGuards(AuthGuard)
   @ApiResponse({type:ResultDto})
   async createPayment(@Req()request:Request,@Body()createPaymentDto:CreatePaymentDto){
     const {user}=request as any
@@ -22,8 +21,8 @@ export class PaymentController {
   @Get('verify-payment')
   @ApiResponse({type:ResultDto})
   async verifyPayment(@Query()query:VerifyPaymentDto){ 
-    const {Authority,Status}=query;
-   return this.paymentService.verifyPayment(Authority)
+    const {authority,status}=query;
+   return this.paymentService.verifyPayment(authority)
   }
 
  

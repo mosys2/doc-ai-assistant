@@ -55,6 +55,7 @@ export class PaymentService {
       });
 
       const result = await this.zarinpalRequest(transaction.amount, findUser);
+      console.log(result?.data?.authority)
       if (result?.data?.authority) {
         transaction.authority = result?.data?.authority;
         await transaction.save();
@@ -106,7 +107,16 @@ export class PaymentService {
   }
 
   async zarinpalRequest(amount, user, description = "buy") {
-    console.log(process.env.ZARINPAL_REQUEST_URL);
+    console.log({
+      url: process.env.ZARINPAL_REQUEST_URL as string,
+      merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+      callback_url: process.env.ZARINPAL_CALLBACK_URL,
+      amount,
+      description,
+      metadata: {
+        mobile: user.mobile,
+      },
+    },)
     try {
       const result = await axios.post(
         process.env.ZARINPAL_REQUEST_URL as string,
@@ -116,7 +126,6 @@ export class PaymentService {
           amount,
           description,
           metadata: {
-            email: "example@gmail.com",
             mobile: user.mobile,
           },
         },
@@ -125,10 +134,10 @@ export class PaymentService {
             "Content-Type": "application/json",
           },
         }
-      );
+      )
       return result.data;
     } catch (error) {
-      throw new Error(error.message || "خطا در ایجاد لینک پرداخت");
+      throw new Error("خطا در ایجاد لینک پرداخت");
     }
   }
 

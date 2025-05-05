@@ -4,9 +4,9 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class VerifyPaymentDto {
   @IsNotEmpty()
   @ApiProperty()
-  Authority: string;
+  authority: string;
 
   @IsNotEmpty()
   @ApiProperty()
-  Status: string;
+  status: string;
 }

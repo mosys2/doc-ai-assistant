@@ -16,6 +16,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { TokenPayload } from "./types/payload";
 import { ResultDto } from "src/common/Dtos/ResultDto.dto";
+import  {sendOtpSms} from "src/services/melipayamak";
 
 @Injectable()
 export class AuthService {
@@ -38,6 +39,7 @@ export class AuthService {
       });
     }
     const code = await this.createOtpForUser(user);
+    await sendOtpSms(user.mobile, code);
     return {
       isSuccess: true,
       message: "send code to: " + user.mobile + "your code is: " + code,

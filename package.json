@@ -37,6 +37,8 @@
     "dotenv": "^16.5.0",
     "helmet": "^8.1.0",
     "kavenegar": "^1.1.4",
+    "melipayamak": "^1.0.5",
+    "melipayamak-api": "^0.1.0",
     "mongoose": "^8.14.0",
     "openai": "^4.96.0",
     "reflect-metadata": "^0.2.2",
