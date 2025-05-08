@@ -16,7 +16,7 @@ export class User {
   @Prop({default:false})
   isMobileVerified:boolean
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Package', default: null })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Package', default: '68162d73a39f3fb92bd9c8d5' })
   currentPackage: Package;
   
 }
