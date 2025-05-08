@@ -6,7 +6,7 @@ export async function sendOtpSms(to: string, code: string) {
   const bodyId = process.env.MELIPAYAMAK_OTP_PATTERN;
 
   try {
-    const response = await axios.post('https://rest.payamak-panel.com/api/SendSMS/BaseServiceNumber2', {
+    const response = await axios.post('https://rest.payamak-panel.com/api/SendSMS/BaseServiceNumber', {
       username,
       password,
       text: code,
