@@ -32,6 +32,15 @@ export class PaymentService {
     private transactionModel: Model<TransactionDocument>
   ) {}
 
+  async getAllPackage():Promise<ResultDto<any>>{
+    const packages=await this.packageModel.find();
+    return{
+      isSuccess:true,
+      data:packages
+    }
+
+  }
+
   async createPayment(
     userId: string,
     packageId: string
@@ -55,7 +64,7 @@ export class PaymentService {
       });
 
       const result = await this.zarinpalRequest(transaction.amount, findUser);
-      console.log(result?.data?.authority)
+      console.log(result?.data?.authority);
       if (result?.data?.authority) {
         transaction.authority = result?.data?.authority;
         await transaction.save();
@@ -87,10 +96,16 @@ export class PaymentService {
       if (result.data.code === 100) {
         transaction.status = true;
         await transaction.save();
-        return {
-          isSuccess: true,
-          message: "پرداخت با موفقیت انجام شد",
-        };
+        const user = await this.userModel.findOne(transaction.user);
+        if (user) {
+          user.currentPackage = transaction.package;
+          await user.save();
+          return {
+            isSuccess: true,
+            message: "پرداخت با موفقیت انجام شد",
+          };
+        }
+        throw new Error("کاربر یافت نشد");
       } else if (result.data.code === 101) {
         return {
           isSuccess: true,
@@ -116,7 +131,7 @@ export class PaymentService {
       metadata: {
         mobile: user.mobile,
       },
-    },)
+    });
     try {
       const result = await axios.post(
         process.env.ZARINPAL_REQUEST_URL as string,
@@ -134,7 +149,7 @@ export class PaymentService {
             "Content-Type": "application/json",
           },
         }
-      )
+      );
       return result.data;
     } catch (error) {
       throw new Error("خطا در ایجاد لینک پرداخت");

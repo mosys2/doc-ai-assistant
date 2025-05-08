@@ -39,7 +39,9 @@ export class AuthService {
       });
     }
     const code = await this.createOtpForUser(user);
-    await sendOtpSms(user.mobile, code);
+    if(process.env.NODE_ENV =='production'){
+      await sendOtpSms(user.mobile, code);
+    }
     return {
       isSuccess: true,
       message: "send code to: " + user.mobile + "your code is: " + code,
@@ -89,7 +91,7 @@ export class AuthService {
       });
     } else {
       if (otp.expiers_in > new Date()) {
-        throw new BadRequestException("کد ارسالی منقضی نشده است");
+        throw new BadRequestException("پس از 2 دقیقه دوباره تلاش کنید");
       }
       otp.code = code;
       otp.expiers_in = expierIn;
