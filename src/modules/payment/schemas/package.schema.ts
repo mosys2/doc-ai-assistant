@@ -22,6 +22,10 @@ export class Package {
   @ApiProperty()
   active: boolean;
 
+  @Prop({ type: Array })
+  @ApiProperty()
+  data: [];
+
   @Prop({ type: String })
   @ApiProperty()
   env: string;
