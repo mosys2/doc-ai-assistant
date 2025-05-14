@@ -11,7 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('create-otp')
-  @ApiResponse({type:ResultDto})
+  @ApiResponse({type:ResultDto<Object>})
   createOtp(@Body() createOtpDto: CreateOtpDto) {
     return this.authService.createOtp(createOtpDto);
   }

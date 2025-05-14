@@ -30,7 +30,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService
   ) {}
-  async createOtp(createOtpDto: CreateOtpDto): Promise<ResultDto> {
+  async createOtp(createOtpDto: CreateOtpDto): Promise<ResultDto<Object>> {
     const { mobile } = createOtpDto;
     let user = await this.userModel.findOne({ mobile });
     if (!user) {
@@ -38,12 +38,13 @@ export class AuthService {
         mobile,
       });
     }
-    const code = await this.createOtpForUser(user);
+    const {code,expierIn} = await this.createOtpForUser(user);
     if(process.env.NODE_ENV =='production'){
       await sendOtpSms(user.mobile, code);
     }
     return {
       isSuccess: true,
+      data:{code,expierIn},
       message: "send code to: " + user.mobile + "your code is: " + code,
     };
   }
@@ -97,8 +98,7 @@ export class AuthService {
       otp.expiers_in = expierIn;
     }
     await otp?.save();
-    console;
-    return code;
+    return {code,expierIn};
   }
 
   async generateToken(payload: TokenPayload) {
